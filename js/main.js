@@ -21,16 +21,17 @@ let cursors;
 let map;
 let groundLayer;
 let skyLayer;
+let waterLayer;
 
 const game = new Phaser.Game(config);
 
 function preload() {
 
-    this.load.tilemapTiledJSON("map", "tiled/test.json");
+    this.load.tilemapTiledJSON("map", "tiled/game1.json");
 
 this.load.spritesheet("spritesheet", "tiled/spritesheet.png", { frameWidth: 16, frameHeight: 16 });
 
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('dude', 'assets/girl.png', { frameWidth: 31, frameHeight: 47 });
 }
 
 function create() {
@@ -39,7 +40,7 @@ function create() {
 
     const tiles = map.addTilesetImage('spritesheet');
 
-    groundLayer = map.createLayer('Ground', tiles, 0, 0);
+    groundLayer = map.createLayer('ground', tiles, 0, 0);
 
     groundLayer.setCollisionByExclusion([-1]);
 
