@@ -44,6 +44,10 @@ function create() {
 
     groundLayer.setCollisionByExclusion([-1]);
 
+    waterLayer = map.createLayer('water', tiles, 0, 0);
+
+    waterLayer.setCollisionByExclusion([-1]);
+
     skyLayer = map.createLayer('sky', tiles, 0, 0);
 
     this.physics.world.bounds.width = groundLayer.width;
@@ -81,16 +85,31 @@ function create() {
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.startFollow(player);
+
+    ////////////als je water raakt ben je dood
+    gameOverText = this.add.text(400, 300, 'Game Over', { fontSize: '64px', fill: '#fff' });
+    gameOverText.setOrigin(0.5);
+    gameOverText.setVisible(false);
+
+    this.physics.add.collider(waterLayer, player, playerHitWater, null, this);
+
+
+      // Knop voor opnieuw starten
+      restartButton = this.add.text(400, 400, 'Restart', { fontSize: '32px', fill: '#fff' });
+      restartButton.setOrigin(0.5);
+      restartButton.setInteractive();
+  
+      restartButton.on('pointerdown', restartGame);
 }
 
 function update() {
     if (cursors.left.isDown) {
-        player.setVelocityX(-160);
+        player.setVelocityX(-100);
 
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown) {
-        player.setVelocityX(160);
+        player.setVelocityX(100);
 
         player.anims.play('right', true);
     }
@@ -102,4 +121,24 @@ function update() {
     if (cursors.up.isDown && player.body.onFloor()) {
         player.setVelocityY(-200);
     }
+}
+
+function playerHitWater() {
+    // Handle player's death behavior here
+    // For example, reset player position or end the game
+    // Here's an example of resetting player position:
+    player.setX(100);
+    player.setY(450);
+
+       // Toon game over tekst
+       gameOverText.setVisible(true);
+
+       // Schakel de speler uit
+       player.disableBody(true, true);
+}
+
+function restartGame() {
+    // Reset het spel
+    gameOverText.setVisible(false);
+    player.enableBody(true, 100, 450, true, true); // Stel de speler opnieuw in op startpositie
 }
